@@ -1,12 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function useForm(initial = {}) {
   // create state object for our inputs
   const [inputs, setInputs] = useState(initial);
+  const initialValues = Object.values(initial).join('');
+
+  useEffect(() => {
+    // this function runs when the thig s we are watching change
+    setInputs(initial);
+  }, [initialValues]);
 
   // {
   //   name: 'bird',
-  //   description: 'nice stuff'/,
+  //   description: 'nice stuff',
   //   price: 100
   // }
 
@@ -16,7 +22,7 @@ export default function useForm(initial = {}) {
       value = parseInt(value);
     }
     if (type === 'file') {
-      [value] = e.target.files;
+      [value] = e.target.files; // give me the first thing and store it in value
     }
     setInputs({
       // copy the existing state
@@ -35,7 +41,7 @@ export default function useForm(initial = {}) {
     );
     setInputs(blankState);
   }
-  // return the things we want to sruface from the custom hook
+  // return the things we want to surface from the custom hook
   return {
     inputs,
     handleChange,

@@ -1,8 +1,10 @@
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
+import Router from 'next/router';
 import useForm from '../lib/useForm';
 import Form from './styles/Form';
 import DisplayError from './ErrorMessage';
+import { ALL_PRODUCTS_QUERY } from './Products';
 
 const CREATE_PRODUCT_MUTATION = gql`
   mutation CREATE_PRODUCT_MUTATION(
@@ -40,18 +42,35 @@ export default function CreateProduct() {
     CREATE_PRODUCT_MUTATION,
     {
       variables: inputs,
+      refetchQueries: [{ query: ALL_PRODUCTS_QUERY }], // This is the network way: refetch the products after the mutation has run successfullys
     }
   );
   console.log(createProduct);
+
+  // just showing the two ways of hooking up the onSubmit function
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(inputs);
+    // submit input fields to the backend
+    const res = await createProduct(); // could also pass in the inputs here. In this example, it was preloaded on line 42 since the inputs were know (this is generally the preferred way)
+    // console.log('data: ', data);
+    clearForm();
+    // go to the products page
+    Router.push({
+      pathname: `/product/${res.data.createProduct.id}`,
+    });
+  };
+
   return (
     <Form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        console.log(inputs);
-        // submit input fields to the backend
-        await createProduct();
-        clearForm();
-      }}
+      onSubmit={handleSubmit}
+      // onSubmit={async (e) => {
+      //   e.preventDefault();
+      //   console.log(inputs);
+      //   // submit input fields to the backend
+      //   await createProduct();
+      //   clearForm();
+      // }}
     >
       <DisplayError error={error} />
       <fieldset disabled={loading} aria-busy={loading}>
