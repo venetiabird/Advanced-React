@@ -36,13 +36,13 @@ export default function SignUp() {
     const res = await signup().catch(console.error);
     console.log(res);
     console.log({ data, loading, error });
-    resetForm();
+    // resetForm();
   }
 
   return (
     // don't normally need to add post method,
-    // but if you don't and use the input type of passord
-    // if something is broken in Javascript then the pasowrd
+    // but if you don't and use the input type of password
+    // if something is broken in Javascript then the passworrd
     // could end up on query string :(.
     // Annoying security issue:
     // this means its the browser history
@@ -52,9 +52,9 @@ export default function SignUp() {
       <h2>Sign Up For an Account</h2>
       <DisplayError error={error} />
       <fieldset>
-        {data?.createUSer && (
+        {data?.createUser && (
           <p>
-            Signed up with {data.createUSer.email}
+            Signed up with {data.createUser.email}
             Please go ahead and sign in!.
           </p>
         )}
@@ -80,7 +80,7 @@ export default function SignUp() {
             onChange={handleChange}
           />
         </label>
-        <label htmlFor="email">
+        <label htmlFor="password">
           Password
           <input
             name="password"
